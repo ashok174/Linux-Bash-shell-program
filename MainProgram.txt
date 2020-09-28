@@ -1,0 +1,197 @@
+ # function which deals with log in at the begining with user name and password
+user_first_name=$1
+user_ID=$2
+user=($user_first_name $user_ID)
+user_log_in(){
+if  [[ ${#user[@]} != 2 ]]
+then
+    echo "Please enter your first name and ID only not more not less."
+    exit
+elif ! [[  $user_first_name =~ ^[A-Za-z]+$ && $user_ID =~ ^[0-9]+$ ]]
+then
+     echo "Use parameter in proper format."
+     echo "First enter your name and then ID."
+     exit
+else
+     user_authentication #calling  function  for password verification
+fi
+}
+# password verification function
+user_authentication() {
+counter=0
+until [ $counter -gt 5 ]
+do
+   echo "Please enter your SECRET KEY :- /c"
+   read user_key
+   password="ashok"
+   if [ "$password" = "$user_key" ]
+   then
+       echo "########################################################"
+       echo "          WELCOME TO THE PROGRAM               "
+       echo "          Your Name :-  $user_first_name"
+       echo "          Your ID:- $user_ID"
+       echo "Current date and time is :- $(date) /n"
+       echo "#########################################################"
+       best_team
+       break
+   else
+    ((counter++))
+if [ $counter = 5 ]
+      then
+      echo "It seems that you forgot your password"
+      exit
+    fi
+    echo "password is not correct"
+    echo "Enter a correct password."
+fi
+done
+}
+# function to handle user best cricket team
+best_team(){
+echo -e "-----------------------------------------------------------------"
+echo -e "\t\tCOUNTRY \t\t CODE"
+echo -e "\t\t-------  \t\t ---- \n"
+echo -e "\t\tNepal     \t\t NEP"
+echo -e "\t\tAustralia  \t\t AUS"
+echo -e "\t\tBangladesh  \t\t BAN"
+echo -e "\t\tIndia        \t\t IND"
+echo -e "\t\tEngland       \t\t ENG \n"
+echo -e "Choose which one is the best cricket team in the world:- \c "
+read  user_best_team
+country=(Nepal Australia Bangladesh India England)
+team=($user_best_team)
+if [[ ${#team[@]} != 1 ]]
+then
+    echo "Invalid option"
+    echo "please try again"
+    best_team
+fi
+for i in ${country[@]}
+ do
+  if [ $i = "$user_best_team" ]
+  then
+      echo "Please enter country code not country name."
+      best_team
+      break
+ fi
+done
+other_team=(IND BAN AUS ENG)
+for i in ${other_team[@]}
+do
+if [ $i = "$user_best_team" ]
+
+ then
+      echo "You are wrong please enter the best cricket team."
+      best_team
+      break
+ fi
+done
+
+if [ "$user_best_team" = "NEP" ]
+   then
+       echo "You are right best cricket team is nepal"
+       echo "The Nepali national cricket team nicknamed the rhinos "
+       echo "gorkhalis represents the country of Nepal in the internationa"
+       echo " cricket is governed by the cricket association of Nepal."
+       echo "-------------------------------------------------------------"
+player_selection
+else
+echo  "please enter valid option only."
+best_team
+fi
+}
+#5  function which displays player to user
+player_selection(){
+echo -e "\t\tPlayers            \t\tCODE"
+echo -e "\t\t-------             \t\t---- \n"
+echo -e "\t\tParas Khadka         \t\tPK"
+echo -e "\t\tVirat Kohli           \t\tVK"
+echo -e "\t\tDavid Warner           \t\tDW"
+echo -e "\t\tBen Stokes           \t\tBS"
+echo -e "\t\tRoss Taylor           \t\tRT"
+echo -e "choose code of three players giving the space:- /c"
+read player1 player2 player3
+player=($player1 $player2 $player3)
+player_code=(PK VK DW RT BS)
+if [[ ${#player[@]} != 3  ]]
+then
+echo "try again"
+player_selection
+fi
+for i in ${player[@]}
+do
+a=1
+  for  j in ${player_code[@]}
+ do
+if [ $i = $j ]
+ then
+((a++))
+fi
+   done
+   if [ $a != 2 ]
+then
+ echo "inavalid"
+echo "please select above code only."
+player_selection
+       break
+fi
+ done
+if  [ "$player1" = "$player2" ] || [ "$player1" = "$player3" ] ||  [ "$player2" = "$player3" ]
+then
+ echo "please select different player"
+   player_selection
+else
+
+ echo "good job"
+  player_menu
+fi
+}
+#6 function which displays menu of player
+player_menu(){
+ PS3="choose your favourite palyers from these possibilities:"
+select player in $player1 $player2 $player3
+do
+ if [ -z $player ]
+   then
+ echo "you better not have players"
+    repeat
+    break
+   else
+    echo "You choose $player as  your favourite player"
+    file
+  fi
+done
+}
+#7 file handling  function
+file(){
+if [ "$player" = "BS" -o "$player" = "RT" ]
+then
+    echo "File not found"
+    echo "please choose another player."
+    best_team
+else                                                                    
+ case "$player" in
+      "PK") cat PK
+      ;;
+      "VK") cat VK
+      ;;
+      "DW") cat DW
+     ;;
+      esac
+fi
+}
+#8  function which repeats the program
+repeat(){
+echo -e "Do you want to exit:-(Yes/No)? "
+read confirmation
+case $confirmation in
+"Yes" | "Y")  exit
+;;
+"No" | "N") best_team
+;;
+$confirmation) echo "please enter valid input"
+repeat
+;;
+esac
+}
+user_log_in  # calling user_log_in function where the program starts to execute 
